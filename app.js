@@ -16,15 +16,16 @@ var rowLen = nodes[0].length
 var colHeight = nodes.length
 
 render_nodes = () => {
-  var container = document.getElementById("app");
+  var main_div = document.getElementById("app");
 
   for(var i = 0; i < nodes.length; i++ ) {
     var new_row = document.createElement("div")
     new_row.className = "container";
-    container.appendChild(new_row)
+    main_div.appendChild(new_row)
 
     for(var j = 0; j < nodes[i].length; j++){
       var new_block = document.createElement("div")
+      new_block.setAttribute("id", [i,j])
      
       switch(nodes[i][j]){
         case "#":
@@ -43,15 +44,20 @@ render_nodes = () => {
           new_block.classList.add(...["block", "block-unvisited"])         
           break
       }
-
       new_row.appendChild(new_block)
     }
   }
 }
 
-// push lisää arvon loppuun
-// shift poistaa ja palauttaa ekan luvun
-solve = () => {
+
+mark_visited = (node, value) => {
+  var element = document.getElementById(node);
+  element.classList.add(...["block-visited"])
+  element.appendChild(document.createTextNode(value))
+}
+
+
+bfs = () => {
   var memory = [];
   var visited = Array(colHeight).fill().map(() => Array(rowLen).fill(0));
   var shortestPath = Array(colHeight).fill().map(() => Array(rowLen).fill(999));
@@ -62,40 +68,48 @@ solve = () => {
 
   while(memory.length != 0) {
     var current_node = memory.shift()
-    var current_node_i = current_node[0]
-    var current_node_j = current_node[1]
-    
+
     var next_node_i = current_node[0]+1
     var next_node_j = current_node[1]
-    check_neighbor(shortestPath, memory, visited, next_node_i, next_node_j, current_node_i, current_node_j)
+    check_neighbor(shortestPath, memory, visited, next_node_i, next_node_j, current_node)
 
     var next_node_i = current_node[0]-1
     var next_node_j = current_node[1]
-    check_neighbor(shortestPath, memory, visited, next_node_i, next_node_j, current_node_i, current_node_j)
+    check_neighbor(shortestPath, memory, visited, next_node_i, next_node_j, current_node)
 
 
     var next_node_i = current_node[0]
     var next_node_j = current_node[1]+1
-    check_neighbor(shortestPath, memory, visited, next_node_i, next_node_j, current_node_i, current_node_j)
+    check_neighbor(shortestPath, memory, visited, next_node_i, next_node_j, current_node)
 
 
     var next_node_i = current_node[0]
     var next_node_j = current_node[1]-1
-    check_neighbor(shortestPath, memory, visited, next_node_i, next_node_j, current_node_i, current_node_j)
+    check_neighbor(shortestPath, memory, visited, next_node_i, next_node_j, current_node)
   }
-  console.log(shortestPath)
 };
 
-check_neighbor = (shortestPath, memory, visited, next_node_i, next_node_j, current_node_i, current_node_j) => {
+
+check_neighbor = (shortestPath, memory, visited, next_node_i, next_node_j, current_node) => {
+  var current_node_i = current_node[0]
+  var current_node_j = current_node[1]
+  
   if (next_node_i >= 0 && next_node_j >= 0 && next_node_j < rowLen && next_node_i < colHeight) {
     if (nodes[next_node_i][next_node_j] != "#" && visited[next_node_i][next_node_j] == 0) {
       visited[next_node_i][next_node_j] = 1;
       shortestPath[next_node_i][next_node_j] = shortestPath[current_node_i][current_node_j]+1;
+      mark_visited([next_node_i, next_node_j], shortestPath[current_node_i][current_node_j]+1)
       memory.push([next_node_i, next_node_j])
     }
   }
 }
 
 
+unsolve = () => {
+  var main_div = document.getElementById("app")
+  main_div.innerHTML = ''
+  render_nodes()
+}
+
+
 render_nodes()
-solve()

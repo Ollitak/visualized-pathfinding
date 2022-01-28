@@ -32,3 +32,7 @@ body {
 .block-goal {
   background-color: red;
 }
+
+.block-visited {
+  background-color: blue;
+}
