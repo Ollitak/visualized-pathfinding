@@ -1,0 +1,34 @@
+body {
+  background-color: rgb(226, 217, 217);
+}
+
+.container {
+  display: flex;
+  flex-direction: row;
+}
+
+.block {
+  height: 2em;
+  width: 2em;
+  line-height: 2em;
+  color: white;
+  margin: 3px;
+  text-align: center;
+  vertical-align: middle;
+}
+
+.block-unvisited {
+  background-color: orange;
+}
+
+.block-wall {
+  background-color: black;
+}
+
+.block-character {
+  background-color: green;
+}
+
+.block-goal {
+  background-color: red;
+}
