@@ -13,6 +13,7 @@ body {
   line-height: 1em;
   color: white;
   margin: 3px;
+  border-radius: 1em;
   text-align: center;
   vertical-align: middle;
 }
@@ -26,13 +27,13 @@ body {
 }
 
 .block-character {
-  background-color: green;
+  background-color: rgb(0, 255, 0);
 }
 
 .block-goal {
-  background-color: red;
+  background-color: rgb(255, 0, 0);
 }
 
 .block-visited {
-  background-color: blue;
+  background-color: rgb(202, 211, 84);
 }
