@@ -8,9 +8,9 @@ body {
 }
 
 .block {
-  height: 2em;
-  width: 2em;
-  line-height: 2em;
+  height: 1em;
+  width: 1em;
+  line-height: 1em;
   color: white;
   margin: 3px;
   text-align: center;
