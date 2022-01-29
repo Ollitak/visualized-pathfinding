@@ -1,6 +1,6 @@
-var ROW_LEN = 80
-var COL_HEIGHT = 40
-var NUMBER_OF_WALLS = 500;
+var ROW_LEN = 20
+var COL_HEIGHT = 20
+var NUMBER_OF_WALLS = 10;
 var SOLVE_SPEED = 0;
 
 var found = false;
@@ -72,9 +72,10 @@ mark_visited = (node, value) => {
 bfs = async () => {
   var memory = [];
   var visited = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill(0));
-  var shortestPath = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill(999));
+  var shortestPath = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill(null));
 
   memory.push(start);
+
   visited[start[0]][start[1]] = 1
   shortestPath[start[0]][start[1]] = 0;
 
@@ -122,7 +123,7 @@ check_neighbor = (shortestPath, memory, visited, next_node_i, next_node_j, curre
       memory.push([next_node_i, next_node_j])
 
       if(grid[next_node_i][next_node_j] == "B") {
-        found = true;
+        found = true
       }
     }
   }
@@ -131,6 +132,7 @@ check_neighbor = (shortestPath, memory, visited, next_node_i, next_node_j, curre
 unsolve = () => {
   var main_div = document.getElementById("app")
   main_div.innerHTML = ''
+  found = false
   render_grid()
 }
 
