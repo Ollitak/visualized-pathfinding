@@ -1,10 +1,22 @@
 body {
-  background-color: rgb(226, 217, 217);
+  background-color: rgb(200, 200, 200);
 }
 
-.container {
+.app-container {
+  border: 2px solid black;
+  background-color: white;
+  padding: 1em;
+  display: inline-block;
+}
+
+.row-container {
   display: flex;
   flex-direction: row;
+}
+
+.column-container {
+  display: flex;
+  flex-direction: column;
 }
 
 .block {
@@ -26,7 +38,7 @@ body {
   background-color: black;
 }
 
-.block-character {
+.block-start {
   background-color: rgb(0, 255, 0);
 }
 
@@ -36,4 +48,18 @@ body {
 
 .block-visited {
   background-color: rgb(202, 211, 84);
+}
+
+.block-goal-found {
+  background-color: rgb(255, 0, 255);
+}
+
+button {
+  background-color: rgb(0, 0, 255);
+  border: 2px solid white;
+  color: white;
+  font-weight: bold;
+  height: 3em;
+  width: 12em;
+  margin: 3px 0px 3px;
 }

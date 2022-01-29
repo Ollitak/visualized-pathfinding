@@ -32,7 +32,7 @@ render_grid = () => {
 
   for(var i = 0; i < grid.length; i++ ) {
     var new_row = document.createElement("div")
-    new_row.className = "container";
+    new_row.className = "row-container";
     main_div.appendChild(new_row)
 
     for(var j = 0; j < grid[i].length; j++){
@@ -45,7 +45,7 @@ render_grid = () => {
           //new_block.appendChild(document.createTextNode("W"))
           break
         case "A":
-          new_block.classList.add(...["block", "block-character"]) 
+          new_block.classList.add(...["block", "block-start"]) 
           //new_block.appendChild(document.createTextNode("A"))
           break
         case "B":
@@ -64,7 +64,12 @@ render_grid = () => {
 
 mark_visited = (node, value) => {
   var element = document.getElementById(node);
-  element.classList.add(...["block-visited"])
+  
+  if(found)
+   element.classList.add(...["block-goal-found"]) 
+  else
+   element.classList.add(...["block-visited"])
+
   element.appendChild(document.createTextNode(value))
 }
 
@@ -117,14 +122,15 @@ check_neighbor = (shortestPath, memory, visited, next_node_i, next_node_j, curre
   
   if (next_node_i >= 0 && next_node_j >= 0 && next_node_j < ROW_LEN && next_node_i < COL_HEIGHT) {
     if (grid[next_node_i][next_node_j] != "#" && visited[next_node_i][next_node_j] == 0) {
-      visited[next_node_i][next_node_j] = 1;
-      shortestPath[next_node_i][next_node_j] = shortestPath[current_node_i][current_node_j]+1;
-      mark_visited([next_node_i, next_node_j], shortestPath[current_node_i][current_node_j]+1)
-      memory.push([next_node_i, next_node_j])
 
       if(grid[next_node_i][next_node_j] == "B") {
         found = true
       }
+
+      visited[next_node_i][next_node_j] = 1;
+      shortestPath[next_node_i][next_node_j] = shortestPath[current_node_i][current_node_j]+1;
+      mark_visited([next_node_i, next_node_j], shortestPath[current_node_i][current_node_j]+1)
+      memory.push([next_node_i, next_node_j])
     }
   }
 }
