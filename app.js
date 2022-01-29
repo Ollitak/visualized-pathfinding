@@ -1,11 +1,14 @@
-var ROW_LEN = 20
-var COL_HEIGHT = 20
-var NUMBER_OF_WALLS = 10;
-var SOLVE_SPEED = 0;
+var ROW_LEN = 15
+var COL_HEIGHT = 15
+var NUMBER_OF_WALLS = 50;
+var SOLVE_SPEED = 50;
 
 var found = false;
 var grid = []
 var start = undefined
+
+const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
+
 
 generate_grid = () => {
   grid = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill("."));
@@ -66,17 +69,35 @@ render_grid = () => {
 }
 
 
-mark_visited = (node, value) => {
+mark_visited_bfs = (node, steps) => {
   var element = document.getElementById(node);
 
   if(found)
    element.classList.add(...["block-goal-found"]) 
   else
-   element.classList.add(...["block-visited"])
+   element.classList.add(...["block-bfs-visited"])
 
-  element.appendChild(document.createTextNode(value))
+  element.appendChild(document.createTextNode(steps))
 }
 
+check_neighbor = (shortestPath, memory, visited, next_node_i, next_node_j, current_node) => {
+  var current_node_i = current_node[0]
+  var current_node_j = current_node[1]
+  
+  if (next_node_i >= 0 && next_node_j >= 0 && next_node_j < ROW_LEN && next_node_i < COL_HEIGHT) {
+    if (grid[next_node_i][next_node_j] != "#" && visited[next_node_i][next_node_j] === 0 && !found) {
+
+      if(grid[next_node_i][next_node_j] === "B") {
+        found = true
+      }
+
+      visited[next_node_i][next_node_j] = 1;
+      shortestPath[next_node_i][next_node_j] = shortestPath[current_node_i][current_node_j]+1;
+      mark_visited_bfs([next_node_i, next_node_j], shortestPath[current_node_i][current_node_j]+1)
+      memory.push([next_node_i, next_node_j])
+    }
+  }
+}
 
 bfs = async () => {
   var memory = [];
@@ -87,8 +108,6 @@ bfs = async () => {
 
   visited[start[0]][start[1]] = 1
   shortestPath[start[0]][start[1]] = 0;
-
-  const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
   while(memory.length != 0) {
     var current_node = memory.shift()
@@ -120,23 +139,84 @@ bfs = async () => {
 };
 
 
-check_neighbor = (shortestPath, memory, visited, next_node_i, next_node_j, current_node) => {
-  var current_node_i = current_node[0]
-  var current_node_j = current_node[1]
-  
-  if (next_node_i >= 0 && next_node_j >= 0 && next_node_j < ROW_LEN && next_node_i < COL_HEIGHT) {
-    if (grid[next_node_i][next_node_j] != "#" && visited[next_node_i][next_node_j] == 0) {
 
-      if(grid[next_node_i][next_node_j] == "B") {
-        found = true
-      }
+mark_visited_dfs = (node, steps, type) => {
+  var element = document.getElementById(node);
 
-      visited[next_node_i][next_node_j] = 1;
-      shortestPath[next_node_i][next_node_j] = shortestPath[current_node_i][current_node_j]+1;
-      mark_visited([next_node_i, next_node_j], shortestPath[current_node_i][current_node_j]+1)
-      memory.push([next_node_i, next_node_j])
+  if(found) {
+    if(type === "goal") {
+      element.classList.add(...["block-goal-found"]) 
+      element.appendChild(document.createTextNode(steps))
+    } else {
+      element.appendChild(document.createTextNode(steps))
     }
+    return;
   }
+
+  if(type == "dfs_path") {
+    element.classList.add(...["block-dfs-path"])
+  }
+  
+  if(type == "dfs_visited") {
+    element.classList.add(...["block-dfs-visited"])
+  }
+}
+
+calc_dfs = () => {
+  var visited = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill(0));
+  dfs(start, 0, visited)
+}
+
+dfs = async (node, steps, visited) => {
+  var node_i = node[0]
+  var node_j = node[1]
+
+  if(found) {
+    return
+  }
+
+  if (node_i < 0 || node_j < 0 || node_i >= COL_HEIGHT || node_j >= ROW_LEN) {
+    return
+  }
+
+  var symbol = grid[node_i][node_j]
+
+  if (symbol === "B"){
+    found = true
+    mark_visited_dfs([node_i, node_j], steps, "goal")
+    return
+  }
+
+  if (symbol === "#" || visited[node_i][node_j] === 1){
+    return
+  }
+
+  await sleep(SOLVE_SPEED)
+
+  visited[node_i][node_j] = 1;
+  mark_visited_dfs([node_i, node_j], steps, "dfs_path")
+  steps++
+
+
+  var next_node_i = node_i+1
+  var next_node_j = node_j
+  await dfs([next_node_i, next_node_j], steps, visited)
+
+  var next_node_i = node_i-1
+  var next_node_j = node_j
+  await dfs([next_node_i, next_node_j], steps, visited)
+
+
+  var next_node_i = node_i
+  var next_node_j = node_j+1
+  await dfs([next_node_i, next_node_j], steps, visited)
+
+  var next_node_i = node_i
+  var next_node_j = node_j-1
+  await dfs([next_node_i, next_node_j], steps, visited)
+
+  mark_visited_dfs([node_i, node_j], steps, "dfs_visited")
+  steps--
 }
 
 

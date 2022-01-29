@@ -24,8 +24,7 @@ body {
   width: 1em;
   line-height: 1em;
   color: white;
-  margin: 3px;
-  border-radius: 1em;
+  margin: 1px;
   text-align: center;
   vertical-align: middle;
 }
@@ -43,15 +42,23 @@ body {
 }
 
 .block-goal {
-  background-color: rgb(255, 0, 0);
+  background-color: rgb(255, 0, 255);
 }
 
-.block-visited {
+.block-bfs-visited {
   background-color: rgb(202, 211, 84);
 }
 
 .block-goal-found {
   background-color: rgb(255, 0, 255);
+}
+
+.block-dfs-path {
+  background-color: rgb(0, 255, 0);
+}
+
+.block-dfs-visited {
+  background-color: rgb(255, 0, 0);
 }
 
 button {
