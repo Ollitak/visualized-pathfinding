@@ -24,10 +24,14 @@ generate_grid = () => {
   var goal_i = Math.floor(Math.random() * COL_HEIGHT);
   var goal_j = Math.floor(Math.random() * ROW_LEN);
   grid[goal_i][goal_j] = "B"
+
+  render_grid()
 }
 
 
 render_grid = () => {
+  clear_grid()
+
   var main_div = document.getElementById("app");
 
   for(var i = 0; i < grid.length; i++ ) {
@@ -64,7 +68,7 @@ render_grid = () => {
 
 mark_visited = (node, value) => {
   var element = document.getElementById(node);
-  
+
   if(found)
    element.classList.add(...["block-goal-found"]) 
   else
@@ -135,12 +139,12 @@ check_neighbor = (shortestPath, memory, visited, next_node_i, next_node_j, curre
   }
 }
 
-unsolve = () => {
+
+clear_grid = () => {
   var main_div = document.getElementById("app")
   main_div.innerHTML = ''
   found = false
-  render_grid()
 }
 
+
 generate_grid()
-render_grid()
