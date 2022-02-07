@@ -15,6 +15,18 @@ var goal = undefined
 const sleep = (delay) => new Promise((resolve) => setTimeout(resolve, delay))
 
 
+// Hide buttons when algorithm is running
+const hide_buttons = () => {
+  var buttons = document.getElementById("buttons");
+  buttons.style.display = "none";
+}
+
+// Reset hide
+const unhide_buttons = () => {
+  var buttons = document.getElementById("buttons");
+  buttons.style.display = "";
+}
+
 // Generates a grid where # denotes walls, A denotes starting point and B denotes the goal
 generate_grid = () => {
   grid = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill("."));
@@ -117,6 +129,8 @@ check_neighbor = (shortest_path, memory, visited, next_node_i, next_node_j, curr
 // When the goal is found, a global variable "found" is set to true, after which no more nodes
 // are added to the memory and backtracking function is called to visualize the shortes path.
 bfs = async () => {
+  hide_buttons();
+
   var memory = [];
   var visited = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill(0));
   var shortest_path = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill(null));
@@ -152,7 +166,8 @@ bfs = async () => {
     await sleep(SOLVE_SPEED)
 
     if (found) {
-      backtrack_shortest_path_bfs(shortest_path)
+      await backtrack_shortest_path_bfs(shortest_path)
+      unhide_buttons();
       return
     }
   }
@@ -231,9 +246,12 @@ render_node_dfs = (node, steps, type) => {
   }
 }
 
-calc_dfs = () => {
+calc_dfs = async () => {
+  hide_buttons();
+
   var visited = Array(COL_HEIGHT).fill().map(() => Array(ROW_LEN).fill(0));
-  dfs(start, 0, visited)
+  await dfs(start, 0, visited)
+  unhide_buttons();
 }
 
 // Recursive DFS algorithm aiming to find one path to goal, which likely isn't the shortest path.
